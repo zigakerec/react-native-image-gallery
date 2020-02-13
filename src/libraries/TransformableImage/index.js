@@ -158,6 +158,7 @@ export default class TransformableImage extends PureComponent {
             if (viewWidth && viewHeight) {
                 maxScale = Math.max(width / viewWidth, height / viewHeight);
                 maxScale = Math.max(1, maxScale);
+                maxScale = 1
             }
         }
 

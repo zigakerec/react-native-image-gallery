@@ -41,6 +41,7 @@ export default class Gallery extends PureComponent {
     currentPage = 0;
     pageCount = 0;
     gestureResponder = undefined;
+    numberOfFingers = 1
 
     constructor (props) {
         super(props);
@@ -58,6 +59,8 @@ export default class Gallery extends PureComponent {
     componentWillMount () {
         let onResponderReleaseOrTerminate = (evt, gestureState) => {
             if (this.activeResponder) {
+                // if swipe down or up && only one finger is used, trigger close
+                if (Math.abs(gestureState.dy) > Math.abs(gestureState.dx) && Math.abs(gestureState.dy) > 5 && this.numberOfFingers < 2) this.props.close()
                 if (this.activeResponder === this.viewPagerResponder &&
                     !this.shouldScrollViewPager(evt, gestureState) &&
                     Math.abs(gestureState.vx) > 0.5) {
@@ -79,6 +82,7 @@ export default class Gallery extends PureComponent {
             onResponderMove: (evt, gestureState) => {
                 if (this.firstMove) {
                     this.firstMove = false;
+                    this.numberOfFingers = evt.nativeEvent.touches.length
                     if (this.shouldScrollViewPager(evt, gestureState)) {
                         this.activeViewPagerResponder(evt, gestureState);
                     }
