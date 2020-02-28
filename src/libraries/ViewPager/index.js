@@ -4,11 +4,15 @@ import {
     FlatList,
     ViewPropTypes,
     InteractionManager,
-    Dimensions
+    Dimensions,
+    Image,
+    Text,
+    TouchableOpacity
 } from 'react-native';
 import PropTypes from 'prop-types';
 import Scroller from '../Scroller';
 import { createResponder } from '../GestureResponder';
+import { isRequired } from 'react-native/Libraries/DeprecatedPropTypes/DeprecatedColorPropType';
 
 const MIN_FLING_VELOCITY = 0.5;
 
@@ -87,7 +91,7 @@ export default class ViewPager extends PureComponent {
         });
     }
 
-    UNSAFE_componentWillMount () {
+    componentWillMount () {
         this.gestureResponder = createResponder({
             onStartShouldSetResponder: (evt, gestureState) => true,
             onResponderGrant: this.onResponderGrant,
@@ -311,28 +315,33 @@ export default class ViewPager extends PureComponent {
         }
 
         return (
-            <View
-              {...this.props}
-              style={[style, { flex: 1 }]}
-              {...gestureResponder}>
-                <FlatList
-                  {...this.props.flatListProps}
-                  style={[{ flex: 1 }, scrollViewStyle]}
-                  ref={'innerFlatList'}
-                  keyExtractor={this.keyExtractor}
-                  scrollEnabled={false}
-                  horizontal={true}
-                  data={pageDataArray}
-                  renderItem={this.renderRow}
-                  onLayout={this.onLayout}
+            <>
+                <TouchableOpacity onPress={this.props.close} style={{ position: 'absolute', top: 30, zIndex: 100, height: 50, width: 50, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Image style={{ transform: [{ scale: 1.5 }] }} source={require('../assets/remove.png')}/>
+                </TouchableOpacity>
+                <View
+                {...this.props}
+                style={[style, { flex: 1 }]}
+                {...gestureResponder}>
+                    <FlatList
+                    {...this.props.flatListProps}
+                    style={[{ flex: 1 }, scrollViewStyle]}
+                    ref={'innerFlatList'}
+                    keyExtractor={this.keyExtractor}
+                    scrollEnabled={false}
+                    horizontal={true}
+                    data={pageDataArray}
+                    renderItem={this.renderRow}
+                    onLayout={this.onLayout}
 
-                  // use contentOffset instead of initialScrollIndex so that we don't have
-                  // to use the buggy 'getItemLayout' prop. See
-                  // https://github.com/facebook/react-native/issues/15734#issuecomment-330616697 and
-                  // https://github.com/facebook/react-native/issues/14945#issuecomment-354651271
-                  contentOffset = {{x: this.getScrollOffsetOfPage(parseInt(this.props.initialPage)), y:0}}
-              />
-            </View>
+                    // use contentOffset instead of initialScrollIndex so that we don't have
+                    // to use the buggy 'getItemLayout' prop. See
+                    // https://github.com/facebook/react-native/issues/15734#issuecomment-330616697 and
+                    // https://github.com/facebook/react-native/issues/14945#issuecomment-354651271
+                    contentOffset = {{x: this.getScrollOffsetOfPage(parseInt(this.props.initialPage)), y:0}}
+                />
+                </View>
+            </>
         );
     }
 }

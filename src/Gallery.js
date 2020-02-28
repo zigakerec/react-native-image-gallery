@@ -56,7 +56,7 @@ export default class Gallery extends PureComponent {
         this.activeImageResponder = this.activeImageResponder.bind(this);
     }
 
-    UNSAFE_componentWillMount () {
+    componentWillMount () {
         let onResponderReleaseOrTerminate = (evt, gestureState) => {
             if (this.activeResponder) {
                 // if swipe down or up && only one finger is used, trigger close
@@ -289,6 +289,7 @@ export default class Gallery extends PureComponent {
               onPageScrollStateChanged={this.onPageScrollStateChanged}
               onPageScroll={this.props.onPageScroll}
               removeClippedSubviews={this.props.removeClippedSubviews}
+              close={this.props.close}
             />
         );
     }
